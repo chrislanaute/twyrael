@@ -2,3 +2,5 @@ twig:
     default_path: '%kernel.project_dir%/templates'
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+    # configuration de l'application symfony pour utiliser les styles bootstrap 4 lors du rendu des formulaires
+    form_themes: ['bootstrap_4_layout.html.twig']

@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Twyrael - Inscription{% endblock %}
+
+{% block body %}
+    <h1 class="text-center mt-4">Inscription</h1>
+
+    {{ form_start(form) }}
+
+    {{ form_row(form.nickname, {
+         'label': 'nom d\'utilsateur',
+         'attr': {'placeholder': 'nom d\'utilisateur'}
+     }) }}
+
+    {{ form_row(form.email, {
+         'label': 'adresse email',
+         'attr': {'placeholder': 'adresse email'}
+     }) }}
+
+    {{ form_row(form.password,{
+        'label' : 'mot de passe',
+        'attr' : {'placeholder': 'mot de passe'}
+    }) }}
+
+    {{ form_row(form.confirm_password,{
+        'label' : 'confirmer le mot de passe',
+        'attr' : {'placeholder': 'confirmer le mot de passe'}
+    }) }}
+
+    {{ form_row(form.description,{
+        'label' : 'saisir une description',
+        'attr' : {'placeholder': 'saisir une description'}
+    }) }}
+
+    {{ form_row(form.image,{
+        'label' : 'insérer une image',
+        'attr' : {'placeholder': 'insérer une image'}
+    }) }}
+
+    {{ form_row(form.public,{
+        'label' : 'profil public',
+    }) }}
+
+    <button type="submit" class="btn btn-success">Inscription</button>
+    
+
+    {{ form_end(form) }}
+{% endblock %}
