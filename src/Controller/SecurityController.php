@@ -34,6 +34,27 @@ class SecurityController extends AbstractController
             // enregistre le mot de passe de façon sécurisé
             $user->setPassword($hash);
 
+            // récupère l'image uploadé par l'utilisateur
+            $file = $form->get('image')->getData();
+            if ($file) {
+                // génère un nom unique pour l'image
+                $fileName = md5(uniqid()).'.'.$file->guessExtension();
+
+                try {
+                    // déplace le fichier dans le bon répertoire
+                    $file->move(
+                        $this->getParameter('images_directory'),
+                        $fileName
+                    );
+                    // affecte le nom de l'image à l'utilisateur
+                    $user->setImage($fileName);
+                } catch (FileException $e) {
+                    // met à null l'image de l'utilsateur
+                    $user->setImage(null);
+                }
+            } else
+                $user->setImage(null);
+
             // demande à doctrine de sauvegarder l'utilisateur
             $manager->persist($user);
             // exécute la requête

@@ -2,7 +2,7 @@ security:
     # permet d'encrypter les mots de passe des utilisateurs
     encoders:
         App\Entity\User:
-            algorithm: bcrypt
+            algorithm: auto
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
@@ -42,5 +42,14 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        # autorise l'accès aux pages de connection et d'inscription seulement au personne non connecté
+        - { path: ^/connexion, allow_if: "not is_granted('ROLE_USER')" }
+        - { path: ^/inscription, allow_if: "not is_granted('ROLE_USER')" }
+        # autorise l'accès aux pages de profil et de déconnection seulement au personne non connecté
+        - { path: ^/profil, roles: ROLE_USER }
+        - { path: ^/deconnexion, roles: ROLE_USER }        
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+
+    # redirige l'utilisateur vers la page d'accueil s'il tente d'accéder à une page non autorisé pour lui
+    access_denied_url: /

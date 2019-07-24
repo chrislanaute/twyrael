@@ -2,6 +2,10 @@
 
 {% block title %}Twyrael - Inscription{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/inscription.css') }}">
+{% endblock %}
+
 {% block body %}
     <h1 class="text-center mt-4">Inscription</h1>
 
@@ -37,12 +41,36 @@
         'attr' : {'placeholder': 'insérer une image'}
     }) }}
 
+    <div id="preview" class="form-group">
+        <p><a href="#imageModal" data-toggle="modal" data-target="#imageModal">voir l'image</a></p>
+        <p><a href="#" id="delImage">supprimer l'image</a></p>
+        <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="imageModalTitle">Mon image</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <img id="img-selected" class="d-block mx-auto">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{ form_row(form.public,{
         'label' : 'profil public',
     }) }}
 
     <button type="submit" class="btn btn-success">Inscription</button>
-    
 
     {{ form_end(form) }}
 {% endblock %}
+
+{% block javascripts %}<script src="{{ asset('js/inscription.js') }}"></script>{% endblock %}
