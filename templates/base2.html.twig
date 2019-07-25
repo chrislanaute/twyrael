@@ -26,8 +26,8 @@
                             {% if not app.user %}
                                 <a class="dropdown-item disabled">Bienvenue visiteur</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="/monblog">Articles</a>
-                                <a class="dropdown-item" href="/monblog">créer un article</a>
+                                <a class="dropdown-item" href="{{ path('monblog') }}">Articles</a>
+                                <a class="dropdown-item" href="{{ path('blog_create') }}">créer un article</a>
                             {% else %}
                                 <a class="dropdown-item disabled">Bienvenue {{ app.user.nickname }}</a>
                                 <div class="dropdown-divider"></div>
