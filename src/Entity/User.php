@@ -75,9 +75,21 @@ class User implements UserInterface
      */
     private $articles;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Follower", mappedBy="user", orphanRemoval=true)
+     */
+    private $userFollower;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Follower", mappedBy="follower", orphanRemoval=true)
+     */
+    private $userFollowed;
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
+        $this->userFollower = new ArrayCollection();
+        $this->userFollowed = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -194,6 +206,68 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($article->getUser() === $this) {
                 $article->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Follower[]
+     */
+    public function getUserFollower(): Collection
+    {
+        return $this->userFollower;
+    }
+
+    public function addUserFollower(Follower $userFollower): self
+    {
+        if (!$this->userFollower->contains($userFollower)) {
+            $this->userFollower[] = $userFollower;
+            $userFollower->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserFollower(Follower $userFollower): self
+    {
+        if ($this->userFollower->contains($userFollower)) {
+            $this->userFollower->removeElement($userFollower);
+            // set the owning side to null (unless already changed)
+            if ($userFollower->getUser() === $this) {
+                $userFollower->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Follower[]
+     */
+    public function getUserFollowed(): Collection
+    {
+        return $this->userFollowed;
+    }
+
+    public function addUserFollowed(Follower $userFollowed): self
+    {
+        if (!$this->userFollowed->contains($userFollowed)) {
+            $this->userFollowed[] = $userFollowed;
+            $userFollowed->setFollower($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserFollowed(Follower $userFollowed): self
+    {
+        if ($this->userFollowed->contains($userFollowed)) {
+            $this->userFollowed->removeElement($userFollowed);
+            // set the owning side to null (unless already changed)
+            if ($userFollowed->getFollower() === $this) {
+                $userFollowed->setFollower(null);
             }
         }
 
