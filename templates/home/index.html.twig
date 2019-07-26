@@ -3,21 +3,57 @@
 {% block title %}
     Twyrael - Accueil
 {% endblock %}
+        
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
+{% endblock %}
+
+{% block navbar %}
+    <li class="nav-item">
+        <a class="nav-link" href="#postModal" data-toggle="modal" data-target="#postModal">Nouveau message</a>
+    </li>
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <h1 class="text-center mt-4 mb-4">Flux d'actualité</h1>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    {{ form_start(form) }}
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/maison/Desktop/twyrael-christophe-project/src/Controller/HomeController.php'|file_link(0) }}">src/Controller/HomeController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/maison/Desktop/twyrael-christophe-project/templates/home/index.html.twig'|file_link(0) }}">templates/home/index.html.twig</a></code></li>
-        <li>Your pseudo at <code><a href="https://worldofwarcraft.com/fr-fr/character/eu/culte-de-la-rive-noire/freija" target=_blank>https://worldofwarcraft.com/fr-fr/character/eu/culte-de-la-rive-noire/freija</a></code></li>
-    </ul>
-</div>
+    <div class="modal fade" id="postModal" tabindex="-1" role="dialog" aria-labelledby="postModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="postModalTitle">Nouveau message</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{ form_row(form.description, {
+                        'label': 'Message - 280 caractères restants',
+                        'attr': {'placeholder': 'Message'}
+                    }) }}
+
+                    {{ form_row(form.public, {'label': 'Message public'}) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ form_end(form) }}
+
+    {% for article in articles %}
+        <div class="card border-primary mb-3">
+            <div class="card-header">Posté par {{ article.user.nickname }} le</div>
+            <div class="card-body">
+                <p class="card-text">{{ article.description }}</p>
+            </div>
+        </div>
+    {% endfor %}
 {% endblock %}
+
+{% block javascripts %}<script src="{{ asset('js/home.js') }}"></script>{% endblock %}

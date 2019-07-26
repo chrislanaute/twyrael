@@ -40,8 +40,9 @@ class BlogController extends AbstractController
      * @route("/blog/new", name="blog_create")
      */
     public function create(Request $request, ObjectManager $manager)
-    {   dump($request);
-        if($request->request->count() >0)
+    {
+        dump($request);
+        if($request->request->count() > 0) {
             $article = new article();
             $article->setTitle($request->request->get('title'))
                     ->setContent($request->request->get('content'))
