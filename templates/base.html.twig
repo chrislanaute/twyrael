@@ -31,7 +31,7 @@
                             {% else %}
                                 <a class="dropdown-item disabled">Bienvenue {{ app.user.nickname }}</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Profil</a>
+                                <a class="dropdown-item" href="{{ path('profil') }}">Mon compte</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{{ path('security_deconnexion') }}">Déconnexion</a>
                             {% endif %}

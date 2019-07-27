@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Twyrael - Mon compte
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/inscription.css') }}">
+{% endblock %}
+
+{% block body %}
+    <h1 class="text-center mt-4 mb-4">Mon compte</h1>
+
+    <div class="card text-center">
+        <div class="card-header">
+            <ul class="nav nav-tabs nav-fill card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" id="nav-info-tab" data-toggle="tab" href="#nav-info" role="tab" aria-controls="nav-info" aria-selected="true">Mes informations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="nav-articles-tab" data-toggle="tab" href="#nav-articles" role="tab" aria-controls="nav-articles" aria-selected="true">Mes articles</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="nav-followers-tab" data-toggle="tab" href="#nav-followers" role="tab" aria-controls="nav-followers" aria-selected="true">Mes Followers</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="nav-abo-tab" data-toggle="tab" href="#nav-abo" role="tab" aria-controls="nav-abo" aria-selected="true">Mes abonnés</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body tab-content">
+            <div class="tab-pane fade show active" id="nav-info" role="tabpanel" aria-labelledby="nav-info-tab">
+                {{ form_start(form) }}
+
+                {{ form_row(form.nickname, {
+                    'label': 'nom d\'utilsateur',
+                    'attr': {'value': user.nickname }
+                }) }}
+
+                {{ form_row(form.description,{
+                    'label' : 'saisir une description',
+                    'value': user.description
+                }) }}
+
+                {% if user.image %}
+                    {{ form_row(form.image,{
+                        'label' : 'insérer une image',
+                        'attr' : {'placeholder': user.image }
+                    }) }}
+                {% else %}
+                    {{ form_row(form.image,{
+                        'label' : 'insérer une image',
+                        'attr' : {'placeholder': 'insérer une image' }
+                    }) }}
+                {% endif %}
+
+                <div id="preview" class="form-group">
+                    <p><a href="#imageModal" data-toggle="modal" data-target="#imageModal">voir l'image</a></p>
+                    <p><a href="#" id="delImage">supprimer l'image</a></p>
+                    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="imageModalTitle">Mon image</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <img id="img-selected" class="d-block mx-auto">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if user.public %}
+                    {{ form_row(form.public,{
+                        'label' : 'profil public',
+                        'attr' : {'checked': 'checked' }
+                    }) }}
+                {% else %}
+                    {{ form_row(form.public,{
+                        'label' : 'profil public'
+                    }) }}
+                {% endif %}
+
+                <button type="submit" class="btn btn-success">Modifier</button>
+
+                {{ form_end(form) }}
+            </div>
+            <div class="tab-pane fade" id="nav-articles" role="tabpanel" aria-labelledby="nav-articles-tab">.2..</div>
+            <div class="tab-pane fade" id="nav-followers" role="tabpanel" aria-labelledby="nav-followers-tab">.3..</div>
+            <div class="tab-pane fade" id="nav-abo" role="tabpanel" aria-labelledby="nav-abo-tab">.4..</div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}<script src="{{ asset('js/inscription.js') }}"></script>{% endblock %}

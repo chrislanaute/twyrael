@@ -45,7 +45,7 @@ security:
         # autorise l'accès aux pages de connection et d'inscription seulement au personne non connecté
         - { path: ^/connexion, allow_if: "not is_granted('ROLE_USER')" }
         - { path: ^/inscription, allow_if: "not is_granted('ROLE_USER')" }
-        # autorise l'accès aux pages de profil et de déconnection seulement au personne non connecté
+        # autorise l'accès aux pages de profil et de déconnection seulement au personne connecté
         - { path: ^/profil, roles: ROLE_USER }
         - { path: ^/deconnexion, roles: ROLE_USER }        
         # - { path: ^/admin, roles: ROLE_ADMIN }

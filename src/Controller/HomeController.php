@@ -38,17 +38,5 @@ class HomeController extends AbstractController
             'articles' => $articles
         ]);
     }
-    /*public function create(Request $request, ObjectManager $manager)
-    {
-        dump($request);
-        if($request->request->count() > 0) {
-            $article = new article();
-            $article->setTitle($request->request->get('title'))
-                    ->setContent($request->request->get('content'))
-                    ->setImage($request->request->get('image'))
-                    ->setCreateAt(new \dateTime());
-            $manager->persist($article);
-            $manager->flush();
-        }
-        return $this->render('blog/create.html.twig');*/
+    
 }
