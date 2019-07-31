@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Twyrael - Mon article
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/inscription.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/profil.css') }}">
+{% endblock %}
+
+{% block body %}
+    <h1 class="text-center mt-4 mb-4">Modification article</h1>
+                
+    {{ form_start(form) }}
+
+    {{ form_row(form.description, {
+        'label': 'Message - 280 caractères restants',
+        'attr': {'placeholder': 'Message'}
+    }) }}
+
+    {{ form_row(form.public, {'label': 'Message public'}) }}
+
+    <button type="submit" class="btn btn-success">Sauvegarder</button>
+
+    {{ form_end(form) }}
+
+{% endblock %}
+
+{% block javascripts %}<script src="{{ asset('js/article.js') }}"></script>{% endblock %}

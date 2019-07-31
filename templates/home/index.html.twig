@@ -48,7 +48,11 @@
 
     {% for article in articles %}
         <div class="card border-primary mb-3">
-            <div class="card-header">Posté par {{ article.user.nickname }} le {{ article.date | date("d/m/Y") }}</div>
+            <div class="card-header">
+                Posté par
+                <a href="{{ path('profil-view', {'nickname': article.user.nickname}) }}"> {{ article.user.nickname }} </a>
+                le {{ article.date | date("d/m/Y") }}
+            </div>
             <div class="card-body">
                 <p class="card-text">{{ article.description }}</p>
             </div>

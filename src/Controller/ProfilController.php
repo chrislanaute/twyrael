@@ -11,6 +11,8 @@ use App\Entity\User;
 use App\Form\InformationType;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use App\Entity\Article;
+use App\Form\EditPostType;
+use App\Entity\Follower;
 
 class ProfilController extends AbstractController
 {
@@ -85,12 +87,12 @@ class ProfilController extends AbstractController
     /**
      * @Route("/profil/{id}/edit", name="profil-edit")
      */
-    public function edit($id, $request, ObjectManager $manager) {
+    public function edit($id, Request $request, ObjectManager $manager) {
         $repo = $this->getDoctrine()->getRepository(Article::class);
         $article = $repo->find($id);
                 
         if ($article != null && $article->getUser() == $this->getUser()) {
-            $form = $this->createForm(PostType::class, $article);
+            $form = $this->createForm(EditPostType::class, $article);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
@@ -102,7 +104,55 @@ class ProfilController extends AbstractController
        
         } else
             return $this->redirectToRoute('profil');
-        return $this->render('profil/edit.html.twig');
+        return $this->render('profil/edit.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/profil/{nickname}", name="profil-view")
+     */
+    public function view($nickname) {
+        if ($nickname == $this->getUser()->getNickname()) {
+            return $this->redirectToRoute('profil');
+        } else {
+            $repo = $this->getDoctrine()->getRepository(User::class);
+            $user = $repo->findOneBy(['nickname' => $nickname]);
+            $repo = $this->getDoctrine()->getRepository(Follower::class);
+            $follower = $repo->findOneBy(['follower' => $this->getUser(), 'user' => $user]);
+            return $this->render('profil/profil.html.twig', [
+                'user' => $user,
+                'follow' => $follower != null ? true : false ,
+            ]);
+        }
+    }
+
+    /**
+     * @Route("/profil/{nickname}/suivre", name="profil-suivre")
+     */
+    public function suivre($nickname, ObjectManager $manager) {
+        $repo = $this->getDoctrine()->getRepository(User::class);
+        $user = $repo->findOneBy(['nickname' => $nickname]);
+        $repo = $this->getDoctrine()->getRepository(Follower::class);
+        $follower = $repo->findOneBy(['follower' => $this->getUser(), 'user' => $user]);
+        if ($follower != null) {
+            $manager->remove($follower);
+        } else {
+            $follower = new Follower();
+            $follower->setBlocked(false);
+            $follower->setUser($user);
+            $follower->setFollower($this->getUser());
+            $manager->persist($follower);
+        }
+        $manager->flush();
+        return $this->redirectToRoute('home');
+    }
+
+    /**
+     * @Route("/profil/{nickname}/blocked", name="profil-blocked")
+     */
+    public function blocked($nickname, ObjectManager $manager) {
+        return $this->redirectToRoute('profil');
     }
 }
 

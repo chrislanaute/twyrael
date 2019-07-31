@@ -38,5 +38,4 @@ class HomeController extends AbstractController
             'articles' => $articles
         ]);
     }
-    
 }
