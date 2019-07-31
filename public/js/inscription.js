@@ -13,6 +13,7 @@ $(document).ready(function () {
             reader.onload = function (e) {
                 // affiche les boutons supprimer et afficher
                 $('#preview').show();
+                $('#preview-exist').show();
                 // ajoute la source de l'image à la balise 'img'
                 $('#img-selected').attr('src', e.target.result);
             }
@@ -31,6 +32,7 @@ $(document).ready(function () {
         // remet le placeholder d'origine
         $('.custom-file-label').text("Chemin de l'image");
         // cache les boutons supprimer et afficher
+        $('#preview-exist').hide();
         $('#preview').hide();
     });
 });

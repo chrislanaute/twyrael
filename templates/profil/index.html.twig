@@ -6,6 +6,7 @@
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('css/inscription.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/profil.css') }}">
 {% endblock %}
 
 {% block body %}
@@ -28,33 +29,37 @@
                 </li>
             </ul>
         </div>
-        <div class="card-body tab-content">
+        <div class="card-body tab-content text-left">
             <div class="tab-pane fade show active" id="nav-info" role="tabpanel" aria-labelledby="nav-info-tab">
-                {{ form_start(form) }}
+                
+                {{ form_start(formInformations) }}
 
-                {{ form_row(form.nickname, {
+                {{ form_row(formInformations.nickname, {
                     'label': 'nom d\'utilsateur',
                     'attr': {'value': user.nickname }
                 }) }}
 
-                {{ form_row(form.description,{
+                {{ form_row(formInformations.description,{
                     'label' : 'saisir une description',
                     'value': user.description
                 }) }}
 
                 {% if user.image %}
-                    {{ form_row(form.image,{
+                    {{ form_row(formInformations.image,{
                         'label' : 'insérer une image',
                         'attr' : {'placeholder': user.image }
                     }) }}
+
+                    <div id="preview-exist" class="form-group">
                 {% else %}
-                    {{ form_row(form.image,{
+                    {{ form_row(formInformations.image,{
                         'label' : 'insérer une image',
                         'attr' : {'placeholder': 'insérer une image' }
                     }) }}
+
+                    <div id="preview" class="form-group">
                 {% endif %}
 
-                <div id="preview" class="form-group">
                     <p><a href="#imageModal" data-toggle="modal" data-target="#imageModal">voir l'image</a></p>
                     <p><a href="#" id="delImage">supprimer l'image</a></p>
                     <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalTitle" aria-hidden="true">
@@ -67,7 +72,11 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <img id="img-selected" class="d-block mx-auto">
+                                    {% if user.image %}
+                                        <img id="img-selected" class="d-block mx-auto" src="{{ asset('img/') }}{{user.image}}">
+                                    {% else %}
+                                        <img id="img-selected" class="d-block mx-auto">
+                                    {% endif %}
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
@@ -78,21 +87,40 @@
                 </div>
 
                 {% if user.public %}
-                    {{ form_row(form.public,{
+                    {{ form_row(formInformations.public,{
                         'label' : 'profil public',
                         'attr' : {'checked': 'checked' }
                     }) }}
                 {% else %}
-                    {{ form_row(form.public,{
+                    {{ form_row(formInformations.public,{
                         'label' : 'profil public'
                     }) }}
                 {% endif %}
 
                 <button type="submit" class="btn btn-success">Modifier</button>
 
-                {{ form_end(form) }}
+                {{ form_end(formInformations) }}
             </div>
-            <div class="tab-pane fade" id="nav-articles" role="tabpanel" aria-labelledby="nav-articles-tab">.2..</div>
+            <div class="tab-pane fade" id="nav-articles" role="tabpanel" aria-labelledby="nav-articles-tab">
+                {% for article in articles %}
+                    <div class="card border-primary mb-3">
+                        <div class="card-header">
+                            Posté par {{ article.user.nickname }} le {{ article.date | date("d/m/Y") }}
+                            <span class="edit-menu">
+                                <a href="{{ path('profil-edit', {'id': article.id}) }}"><i class="far fa-lg fa-edit"></i></a>
+                                <a href="{{ path('profil-delete', {'id': article.id}) }}"><i class="far fa-lg fa-trash-alt"></i></a>
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                <div class="form-group">
+                                    <textarea maxlength="280" class="form-control">{{ article.description }}</textarea>
+                                </div>
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
             <div class="tab-pane fade" id="nav-followers" role="tabpanel" aria-labelledby="nav-followers-tab">.3..</div>
             <div class="tab-pane fade" id="nav-abo" role="tabpanel" aria-labelledby="nav-abo-tab">.4..</div>
         </div>

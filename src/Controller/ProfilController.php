@@ -10,33 +10,28 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\User;
 use App\Form\InformationType;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use App\Entity\Article;
 
 class ProfilController extends AbstractController
 {
     /**
      * @Route("/profil", name="profil")
      */
-    public function index(Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder)
+    public function index(Request $request, ObjectManager $manager)
     {
         // crée un nouvelle utilisateur
-        $user = new User();
+        $user = $this->getUser();
 
         // initialise le formulaire d'inscription
-        $form = $this->createForm(InformationType::class, $user);
+        $formInformations = $this->createForm(InformationType::class, $user);
 
         // analyse la requête envoyé par le formulaire
-        $form->handleRequest($request);
+        $formInformations->handleRequest($request);
 
         // vérifie que le formulaire est envoyé et valide
-        if ($form->isSubmitted() && $form->isValid()) {
-            // génère un hash en fonction du mot de passe de l'utilisateur
-            $hash = $encoder->encodePassword($user, $user->getPassword());
-
-            // enregistre le mot de passe de façon sécurisé
-            $user->setPassword($hash);
-
+        if ($formInformations->isSubmitted() && $formInformations->isValid()) {
             // récupère l'image uploadé par l'utilisateur
-            $file = $form->get('image')->getData();
+            $file = $formInformations->get('image')->getData();
             if ($file) {
                 // génère un nom unique pour l'image
                 $fileName = md5(uniqid()).'.'.$file->guessExtension();
@@ -65,10 +60,49 @@ class ProfilController extends AbstractController
             return $this->redirectToRoute('profil');
         }
 
+        $repo = $this->getDoctrine()->getRepository(Article::class);
+        $articles = $repo->findBy(['user' => $this->getUser()->getId()]);
+
         // renvoie la page d'inscription avec le formulaire créé précédemment
         return $this->render('profil/index.html.twig', [
-            'form' => $form->createView(),
-            'user' => $this->getUser()
+            'formInformations' => $formInformations->createView(),
+            'user' => $user,
+            'articles' => $articles,
         ]);
     }
+    
+    /**
+     * @Route("/profil/{id}/remove", name="profil-delete")
+     */
+    public function delete($id, ObjectManager $manager) {
+        $repo = $this->getDoctrine()->getRepository(Article::class);
+        $article = $repo->find($id);
+        $manager->remove($article);
+        $manager->flush();
+        return $this->redirectToRoute('profil');
+    }
+
+    /**
+     * @Route("/profil/{id}/edit", name="profil-edit")
+     */
+    public function edit($id, $request, ObjectManager $manager) {
+        $repo = $this->getDoctrine()->getRepository(Article::class);
+        $article = $repo->find($id);
+                
+        if ($article != null && $article->getUser() == $this->getUser()) {
+            $form = $this->createForm(PostType::class, $article);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $article->setDate(new \dateTime());
+                $manager->persist($article);
+                $manager->flush();
+                return $this->redirectToRoute('profil');
+            }
+       
+        } else
+            return $this->redirectToRoute('profil');
+        return $this->render('profil/edit.html.twig');
+    }
 }
+
