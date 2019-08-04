@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Twyrael - Hashtag
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/table.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
+{% endblock %}
+
+{% block body %}
+    <h1 class="text-center mt-4 mb-4">Hashtag - #{{ word }}</h1>
+
+    <table class="table" data-toggle="table" data-pagination="true" data-search="true">
+        <thead>
+            <tr>
+                <th scope="col" data-field="article"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for hash in hashtag %}
+            <tr>
+                <td>
+                    <div class="card border-primary mb-3">
+                        <div class="card-header">
+                            <img src="{{ asset('img/') }}{{ hash.image }}" class="rounded float-left" alt="Image de profil" width="50" height="50">
+                            <span class="article-author">
+                                Posté par
+                                <a href="{{ path('profil-view', {'nickname': hash.nickname}) }}"> @{{ hash.nickname }} </a>
+                            </span>
+                            <span class="article-date">
+                                {{ hash.date | date("d/m/Y") }}
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ hash.description |raw }}</p>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/home.js') }}"></script>
+{% endblock %}

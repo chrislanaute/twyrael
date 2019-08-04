@@ -19,6 +19,22 @@ class ArticleRepository extends ServiceEntityRepository
         parent::__construct($registry, Article::class);
     }
 
+    public function findByText($text): array {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT a.description, u.nickname, u.image, a.date FROM article a
+            LEFT JOIN user u
+            ON u.id = a.user_id
+            WHERE a.description LIKE :text
+            ORDER BY a.date DESC
+            ';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['text' => "%#" . $text . "%"]);
+
+        return $stmt->fetchAll();
+    }
+
     // /**
     //  * @return Article[] Returns an array of Article objects
     //  */

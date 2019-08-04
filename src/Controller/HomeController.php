@@ -35,7 +35,7 @@ class HomeController extends AbstractController
                 $article->setDescription(preg_replace($regexWww, "<a href='{$url[0]}'>{$url[0]}</a> ", $form->get('description')->getData()));
             if (preg_match($regexHash, $form->get('description')->getData(), $url)) {
                 $hashtag = substr($url[0], 1);
-                $article->setDescription(preg_replace($regexHash, "<a href='/profil/hashtag/{$hashtag}'>{$url[0]}</a> ", $form->get('description')->getData()));
+                $article->setDescription(preg_replace($regexHash, "<a href='/hashtag/{$hashtag}'>{$url[0]}</a> ", $form->get('description')->getData()));
             }
 
             $article->setUser($this->getUser());
