@@ -113,6 +113,19 @@ class ProfilController extends AbstractController
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
+                $regexUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
+                $regexWww = "/(www).[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
+                $regexHash = "/#[A-Za-z0-9\-\.\_]+(?:)/";
+
+                if (preg_match($regexUrl, $form->get('description')->getData(), $url))
+                    $article->setDescription(preg_replace($regexUrl, "<a href='{$url[0]}'>{$url[0]}</a> ", $form->get('description')->getData()));
+                else if (preg_match($regexWww, $form->get('description')->getData(), $url))
+                    $article->setDescription(preg_replace($regexWww, "<a href='{$url[0]}'>{$url[0]}</a> ", $form->get('description')->getData()));
+                if (preg_match($regexHash, $form->get('description')->getData(), $url)) {
+                    $hashtag = substr($url[0], 1);
+                    $article->setDescription(preg_replace($regexHash, "<a href='/profil/hashtag/{$hashtag}'>{$url[0]}</a> ", $form->get('description')->getData()));
+                }
+
                 $article->setDate(new \dateTime());
                 $manager->persist($article);
                 $manager->flush();

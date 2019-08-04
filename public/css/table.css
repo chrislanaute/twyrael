@@ -1,0 +1,14 @@
+thead {
+    display: none !important;
+}
+
+.table th,
+.table td,
+.table-bordered th,
+.table-bordered td { 
+    border: none !important; 
+}
+
+.table-hover tbody tr:hover {
+    background-color: transparent;
+}

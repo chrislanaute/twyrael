@@ -129,7 +129,7 @@
                     </div>
                     <div class="card-body">
                         <p class="card-text">
-                            {{ article.description }}
+                            {{ article.description |raw }}
                         </p>
                     </div>
                 </div>
@@ -147,7 +147,9 @@
                         {% for follower in followers %}
                         <tr>
                             <form action="{{ path('profil-blocked', {'nickname': follower.follower.nickname}) }}" method="post">
-                                <td>{{ follower.follower.nickname }}</td>
+                                <td>
+                                    <a href="{{ path('profil-view', {'nickname': follower.follower.nickname}) }}"> @{{ follower.follower.nickname }}</a>
+                                </td>
                                 {% if follower.blocked %}
                                 <td>
                                     <button type="submit" class="btn btn-success">Débloquer</button>
@@ -175,7 +177,9 @@
                         {% for follow in followed %}
                         <tr>
                             <form action="{{ path('profil-suivre', {'nickname': follow.user.nickname}) }}" method="post">
-                                <td>{{ follow.user.nickname }}</td>
+                                <td>
+                                    <a href="{{ path('profil-view', {'nickname': follow.user.nickname}) }}"> @{{ follow.user.nickname }}</a>
+                                </td>
                                 <td>
                                     <button type="submit" class="btn btn-success">Ne plus suivre</button>
                                 </td>
@@ -189,4 +193,7 @@
     </div>
 {% endblock %}
 
-{% block javascripts %}<script src="{{ asset('js/inscription.js') }}"></script>{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('js/inscription.js') }}"></script>
+    <script src="{{ asset('js/profil.js') }}"></script>
+{% endblock %}
