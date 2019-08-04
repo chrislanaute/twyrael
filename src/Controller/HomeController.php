@@ -17,7 +17,10 @@ class HomeController extends AbstractController
     public function index(Request $request, ObjectManager $manager)
     {
         $repo = $this->getDoctrine()->getRepository(Article::class);
-        $articles = $repo->findAll();
+        if ($this->getUser())
+            $articles = $repo->findByFollower($this->getUser()->getId());
+        else
+            $articles = $repo->findByPublic();
 
         $article = new Article();
 

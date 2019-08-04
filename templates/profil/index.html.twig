@@ -146,20 +146,18 @@
                     <tbody>
                         {% for follower in followers %}
                         <tr>
-                            <form action="{{ path('profil-blocked', {'nickname': follower.follower.nickname}) }}" method="post">
-                                <td>
-                                    <a href="{{ path('profil-view', {'nickname': follower.follower.nickname}) }}"> @{{ follower.follower.nickname }}</a>
-                                </td>
+                            <td>
+                                <a href="{{ path('profil-view', {'nickname': follower.follower.nickname}) }}"> @{{ follower.follower.nickname }}</a>
+                            </td>
+                            <td>
+                                <form action="{{ path('profil-blocked', {'nickname': follower.follower.nickname}) }}" method="post">
                                 {% if follower.blocked %}
-                                <td>
-                                    <button type="submit" class="btn btn-success">Débloquer</button>
-                                </td>
+                                <button type="submit" class="btn btn-success">Débloquer</button>
                                 {% else %}
-                                <td>
-                                    <button type="submit" class="btn btn-success">Bloquer</button>
-                                </td>
+                                <button type="submit" class="btn btn-success">Bloquer</button>
                                 {% endif %}
-                            </form>
+                                </form>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -176,14 +174,14 @@
                     <tbody>
                         {% for follow in followed %}
                         <tr>
-                            <form action="{{ path('profil-suivre', {'nickname': follow.user.nickname}) }}" method="post">
-                                <td>
-                                    <a href="{{ path('profil-view', {'nickname': follow.user.nickname}) }}"> @{{ follow.user.nickname }}</a>
-                                </td>
-                                <td>
+                            <td>
+                                <a href="{{ path('profil-view', {'nickname': follow.user.nickname}) }}"> @{{ follow.user.nickname }}</a>
+                            </td>
+                            <td>
+                                <form action="{{ path('profil-suivre', {'nickname': follow.user.nickname}) }}" method="post">
                                     <button type="submit" class="btn btn-success">Ne plus suivre</button>
-                                </td>
-                            </form>
+                                </form>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>

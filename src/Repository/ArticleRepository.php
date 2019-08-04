@@ -35,6 +35,41 @@ class ArticleRepository extends ServiceEntityRepository
         return $stmt->fetchAll();
     }
 
+    public function findByFollower($id): array {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT a.description, u.nickname, u.image, a.date from article a
+            LEFT JOIN user u
+            ON u.id = a.user_id
+            INNER JOIN follower f
+            ON f.user_id = a.user_id
+            WHERE f.follower_id = 1
+            ORDER BY a.date DESC
+            ';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['id' => "$id"]);
+
+        return $stmt->fetchAll();
+    }
+
+    public function findByPublic(): array {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT a.description, u.nickname, u.image, a.date from article a
+            LEFT JOIN user u
+            ON u.id = a.user_id
+            WHERE a.public = 1
+            AND u.public = 1
+            ORDER BY a.date DESC
+            ';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
     // /**
     //  * @return Article[] Returns an array of Article objects
     //  */
