@@ -22,10 +22,10 @@
                     <a class="nav-link" id="nav-articles-tab" data-toggle="tab" href="#nav-articles" role="tab" aria-controls="nav-articles" aria-selected="true">Mes articles</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="nav-followers-tab" data-toggle="tab" href="#nav-followers" role="tab" aria-controls="nav-followers" aria-selected="true">Mes Followers</a>
+                    <a class="nav-link" id="nav-followers-tab" data-toggle="tab" href="#nav-followers" role="tab" aria-controls="nav-followers" aria-selected="true">Mes followers</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="nav-abo-tab" data-toggle="tab" href="#nav-abo" role="tab" aria-controls="nav-abo" aria-selected="true">Mes abonnés</a>
+                    <a class="nav-link" id="nav-abo-tab" data-toggle="tab" href="#nav-abo" role="tab" aria-controls="nav-abo" aria-selected="true">Mes abonnements</a>
                 </li>
             </ul>
         </div>
@@ -44,15 +44,34 @@
                     'value': user.description
                 }) }}
 
+                {% if user.public %}
+                    {{ form_row(formInformations.public,{
+                        'label' : 'profil public',
+                        'attr' : {'checked': 'checked' }
+                    }) }}
+                {% else %}
+                    {{ form_row(formInformations.public,{
+                        'label' : 'profil public'
+                    }) }}
+                {% endif %}
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Modifier mes informations</button>
+                </div>
+
+                {{ form_end(formInformations) }}
+
+                {{ form_start(formImage) }}
+
                 {% if user.image %}
-                    {{ form_row(formInformations.image,{
+                    {{ form_row(formImage.image,{
                         'label' : 'insérer une image',
                         'attr' : {'placeholder': user.image }
                     }) }}
 
                     <div id="preview-exist" class="form-group">
                 {% else %}
-                    {{ form_row(formInformations.image,{
+                    {{ form_row(formImage.image,{
                         'label' : 'insérer une image',
                         'attr' : {'placeholder': 'insérer une image' }
                     }) }}
@@ -86,20 +105,9 @@
                     </div>
                 </div>
 
-                {% if user.public %}
-                    {{ form_row(formInformations.public,{
-                        'label' : 'profil public',
-                        'attr' : {'checked': 'checked' }
-                    }) }}
-                {% else %}
-                    {{ form_row(formInformations.public,{
-                        'label' : 'profil public'
-                    }) }}
-                {% endif %}
+                <button type="submit" class="btn btn-success">Modifier mon image</button>
 
-                <button type="submit" class="btn btn-success">Modifier</button>
-
-                {{ form_end(formInformations) }}
+                {{ form_end(formImage) }}
             </div>
             <div class="tab-pane fade" id="nav-articles" role="tabpanel" aria-labelledby="nav-articles-tab">
                 {% for article in articles %}
@@ -119,8 +127,56 @@
                     </div>
                 {% endfor %}
             </div>
-            <div class="tab-pane fade" id="nav-followers" role="tabpanel" aria-labelledby="nav-followers-tab">.3..</div>
-            <div class="tab-pane fade" id="nav-abo" role="tabpanel" aria-labelledby="nav-abo-tab">.4..</div>
+            <div class="tab-pane fade" id="nav-followers" role="tabpanel" aria-labelledby="nav-followers-tab">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nom d'utilisateur</th>
+                            <th scope="col">Outil</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for follower in followers %}
+                        <tr>
+                            <form action="{{ path('profil-blocked', {'nickname': follower.follower.nickname}) }}" method="post">
+                                <td>{{ follower.follower.nickname }}</td>
+                                {% if follower.blocked %}
+                                <td>
+                                    <button type="submit" class="btn btn-success">Débloquer</button>
+                                </td>
+                                {% else %}
+                                <td>
+                                    <button type="submit" class="btn btn-success">Bloquer</button>
+                                </td>
+                                {% endif %}
+                            </form>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="nav-abo" role="tabpanel" aria-labelledby="nav-abo-tab">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nom d'utilisateur</th>
+                            <th scope="col">Outil</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for follow in followed %}
+                        <tr>
+                            <form action="{{ path('profil-suivre', {'nickname': follow.user.nickname}) }}" method="post">
+                                <td>{{ follow.user.nickname }}</td>
+                                <td>
+                                    <button type="submit" class="btn btn-success">Ne plus suivre</button>
+                                </td>
+                            </form>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 {% endblock %}
