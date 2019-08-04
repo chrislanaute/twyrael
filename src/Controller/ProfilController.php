@@ -137,8 +137,14 @@ class ProfilController extends AbstractController
             $user = $repo->findOneBy(['nickname' => $nickname]);
             $repo = $this->getDoctrine()->getRepository(Follower::class);
             $follower = $repo->findOneBy(['follower' => $this->getUser(), 'user' => $user]);
+            $articles = null;
+            if ($user->getPublic() || ($follower && !$follower->getBlocked())) {
+                $repo = $this->getDoctrine()->getRepository(Article::class);
+                $articles = $repo->findBy(['user' => $user->getId()]);
+            }
             return $this->render('profil/profil.html.twig', [
                 'user' => $user,
+                'articles' => $articles,
                 'follow' => $follower != null ? true : false ,
             ]);
         }

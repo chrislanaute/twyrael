@@ -6,63 +6,105 @@
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('css/inscription.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
 {% endblock %}
 
 {% block body %}
-    <h1 class="text-center mt-4">Profil de {{ user.nickname }}</h1>
+    <h1 class="text-center mb-4 mt-4">Profil de {{ user.nickname }}</h1>
 
-    <form action="{{ path('profil-suivre', {'nickname': user.nickname}) }}" method="post">
-        <div class="form-group">
-            <label for="_email">Adresse email</label>
-            <input placeholder="Adresse email" name="_email" type="text" class="form-control" readonly value="{{ user.email }}">
+    <div class="card text-center">
+        <div class="card-header">
+            <ul class="nav nav-tabs nav-fill card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" id="nav-info-tab" data-toggle="tab" href="#nav-info" role="tab" aria-controls="nav-info" aria-selected="true">Informations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="nav-articles-tab" data-toggle="tab" href="#nav-articles" role="tab" aria-controls="nav-articles" aria-selected="true">Articles</a>
+                </li>
+            </ul>
         </div>
-        <div class="form-group">
-            <label for="_description">Description</label>
-            <input placeholder="Description" name="_description" type="text" class="form-control" readonly value="{{ user.description }}">
-        </div>
-        <div class="form-group">
-            <label for="_nickname">pseudo</label>
-            <input placeholder="pseudo" name="_nickname" type="text" class="form-control" readonly value="{{ user.nickname }}">
-        </div>
-        {% if user.image %}
-            <div class="form-group">
-                <p><a href="#imageModal" data-toggle="modal" data-target="#imageModal">voir l'image</a></p>
-                <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalTitle" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="imageModalTitle">Mon image</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <img id="img-selected" class="d-block mx-auto" src="{{ asset('img/') }}{{user.image}}">
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+        <div class="card-body tab-content text-left">
+            <div class="tab-pane fade show active" id="nav-info" role="tabpanel" aria-labelledby="nav-info-tab">
+                <form action="{{ path('profil-suivre', {'nickname': user.nickname}) }}" method="post">
+                    <div class="form-group">
+                        <label for="_nickname">Nom d'utilisateur</label>
+                        <input placeholder="Nom d'utilisateur" name="_nickname" type="text" class="form-control" readonly value="{{ user.nickname }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="_email">Adresse email</label>
+                        <input placeholder="Adresse email" name="_email" type="text" class="form-control" readonly value="{{ user.email }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="_description">Description</label>
+                        <input placeholder="Description" name="_description" type="text" class="form-control" readonly value="{{ user.description }}">
+                    </div>
+                    {% if user.image %}
+                    <div class="form-group">
+                        <p><a href="#imageModal" data-toggle="modal" data-target="#imageModal">voir l'image</a></p>
+                        <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="imageModalTitle">Mon image</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <img id="img-selected" class="d-block mx-auto" src="{{ asset('img/') }}{{ user.image }}">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                    {% endif %}
+                    <div class="form-group">
+                        <div class="form-check">
+                            {% if user.public %}
+                            <input type="checkbox" name="_public" checked="checked" class="form-check-input" disabled>
+                            {% else %}
+                            <input type="checkbox" name="_public" class="form-check-input" disabled>
+                            {% endif %}
+                            <label class="form-check-label" for="_public">profil public</label>
+                        </div>
+                    </div>
+                    <div class="form-group text-center">
+                        {% if follow %}
+                        <button type="submit" class="btn btn-success">Ne plus suivre</button>
+                        {% else %}
+                        <button type="submit" class="btn btn-success">Suivre</button>
+                        {% endif %}
+                    </div>
+                </form>
             </div>
-        {% endif %}
-        <div class="form-group">
-            <div class="form-check">
-                {% if user.public %}
-                    <input type="checkbox" name="_public" checked="checked" class="form-check-input">
+            <div class="tab-pane fade" id="nav-articles" role="tabpanel" aria-labelledby="nav-articles-tab">
+                {% if articles %}
+                    {% for article in articles %}
+                    <div class="card border-primary mb-3">
+                        <div class="card-header">
+                            <img src="{{ asset('img/') }}{{ article.user.image }}" class="rounded float-left" alt="Image de profil" width="50" height="50">
+                            <span class="article-author">
+                                Posté par
+                                <a href="{{ path('profil-view', {'nickname': article.user.nickname}) }}"> @{{ article.user.nickname }} </a>
+                            </span>
+                            <span class="article-date">
+                                {{ article.date | date("d/m/Y") }}
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                {{ article.description }}
+                            </p>
+                        </div>
+                    </div>
+                    {% endfor %}
                 {% else %}
-                    <input type="checkbox" name="_public" class="form-check-input">
+                Le compte de cet utilisateur est privé. Pour voir ses messages vous devez le suivre.
                 {% endif %}
-                <label class="form-check-label" for="_public">profil public</label>
             </div>
         </div>
-        <div class="form-group text-center">
-            {% if follow %}
-                <button type="submit" class="btn btn-success">Ne plus suivre</button>
-            {% else %}
-                <button type="submit" class="btn btn-success">Suivre</button>
-            {% endif %}
-        </div>
-    </form>
+    </div>
 {% endblock %}

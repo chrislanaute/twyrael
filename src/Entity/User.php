@@ -61,7 +61,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\File(mimeTypes={"image/jpeg", "image/gif", "image/png", "image/bmp"}, maxSize="2048k", mimeTypesMessage="Le fichier spécifié ne possède pas un format supporté. Les extensions autorisées sont JPEG, GIF, PNG ou BMP.", maxSizeMessage="Votre image ne doit pas excéder {{ limit }} {{ suffix }}.")
+     * @Assert\File(mimeTypes={"image/jpeg", "image/gif", "image/png", "image/bmp"}, maxSize="2048k", mimeTypesMessage="Le fichier spécifié ne possède pas un format supporté. Les extensions autorisées sont JPEG, GIF, PNG ou BMP.", maxSizeMessage="Votre image ne doit pas excéder {{ limit }} {{ suffix }}.", groups = {"create"})
      */
     private $image;
 

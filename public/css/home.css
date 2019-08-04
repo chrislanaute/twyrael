@@ -1,3 +1,12 @@
 .card {
     border-width: 2px;
 }
+
+.article-author {
+    margin-left: 10px;
+}
+
+.article-date {
+    display: block;
+    margin-left: 60px;
+}
