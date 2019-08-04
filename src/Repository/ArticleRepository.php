@@ -44,7 +44,8 @@ class ArticleRepository extends ServiceEntityRepository
             ON u.id = a.user_id
             INNER JOIN follower f
             ON f.user_id = a.user_id
-            WHERE f.follower_id = 1
+            WHERE f.follower_id = :id
+            OR a.user_id = :id
             ORDER BY a.date DESC
             ';
         $stmt = $conn->prepare($sql);
